@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       shortcuts: {
         LogicalKeySet(LogicalKeyboardKey.space): ActivateIntent(),
       },
-      title: 'PreguntAgua',
+      title: 'Commune',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           fontFamily: GoogleFonts.poppins().fontFamily,
