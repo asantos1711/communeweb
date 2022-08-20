@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:communeweb/modelos/invitadoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'conecciones/conecciones.dart';
+import 'modelos/fraccionamientos.dart';
 
 class VistaUrl extends StatefulWidget {
   String qrCode;
@@ -14,6 +16,8 @@ class VistaUrl extends StatefulWidget {
 
 class _VistaUrlState extends State<VistaUrl> {
   late double h, w;
+
+  final FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +53,9 @@ class _VistaUrlState extends State<VistaUrl> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            _logo(invitado),
             SizedBox(
-              height: 100,
+              height: 50,
             ),
             QrImage(
               data: this.widget.qrCode.toString(),
@@ -68,5 +73,46 @@ class _VistaUrlState extends State<VistaUrl> {
         );
       },
     );
+  }
+
+  _logo(Invitado invitado) {
+    return FutureBuilder(
+      future: getFraccionamientoId(invitado.idFraccionamiento!),
+      builder: (e, AsyncSnapshot<Fraccionamiento?> s) {
+        if (s.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        String url = s.data!.urlLogojpg.toString();
+        return Container(
+          height: 150,
+          child: Image.network(url),
+        );
+      },
+    );
+  }
+
+  Future<Fraccionamiento?> getFraccionamientoId(String id) async {
+    //var snap = _databaseServices.getFracionamientosById(usuario.idFraccionamiento);
+
+    Fraccionamiento _fracc = new Fraccionamiento();
+
+    if (id == "") {
+      print("Double tap");
+      return null;
+    }
+
+    DocumentSnapshot snaps =
+        await db.collection('fraccionamientos').doc(id).get();
+    print(snaps.data());
+
+    if (snaps.exists) {
+      print("dentro");
+      Map<String, dynamic> mapa = snaps.data() as Map<String, dynamic>;
+      _fracc = Fraccionamiento.fromJson(mapa);
+      return _fracc;
+    }
+
+    //print(usuarioBloc.miFraccionamiento.color?.r);
   }
 }
