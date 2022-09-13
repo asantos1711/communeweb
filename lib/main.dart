@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'config/routes.dart';
@@ -8,6 +10,10 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await GRecaptchaV3.ready("6Lf1vvYhAAAAAK4q8oRsIO0BqdAs5PPCJMZdi_t7"); //--2
+
+  }
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

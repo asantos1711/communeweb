@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:communeweb/modelos/invitadoModel.dart';
 import 'package:flutter/material.dart';
+import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'conecciones/conecciones.dart';
@@ -16,8 +17,22 @@ class VistaUrl extends StatefulWidget {
 
 class _VistaUrlState extends State<VistaUrl> {
   late double h, w;
+  late String _token;
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    getToken();
+    super.initState();
+  }
+
+  Future<void> getToken() async {
+    String token = await GRecaptchaV3.execute('submit') ?? 'null returned';
+    setState(() {
+      _token = token;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +98,7 @@ class _VistaUrlState extends State<VistaUrl> {
           return CircularProgressIndicator();
         }
 
-        String url = s.data!.urlLogojpg.toString();
+        String url = s.data!.urlLogopng.toString();
         return Container(
           height: 150,
           child: Image.network(url),

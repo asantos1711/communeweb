@@ -47,6 +47,7 @@ dependencies:
   cloud_firestore_web: ^2.8.0
   firebase_storage_web: ^3.3.1
   firebase_core_web: ^1.7.1
+  g_recaptcha_v3: ^0.0.4
 
 dev_dependencies:
   flutter_test:
