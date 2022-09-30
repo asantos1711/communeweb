@@ -39,6 +39,7 @@ class _VistaUrlState extends State<VistaUrl> {
     h = MediaQuery.of(context).size.height;
     w = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: _carga(),
       ),
@@ -68,22 +69,31 @@ class _VistaUrlState extends State<VistaUrl> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _logo(invitado),
             SizedBox(
-              height: 50,
+              height: 30,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                "¡Hola! ${invitado.nombre}, este es tu código QR de acceso. Recuerda respetar el reglamento.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            _reglamento(),
+            SizedBox(
+              height: 30,
             ),
             QrImage(
               data: this.widget.qrCode.toString(),
               version: QrVersions.auto,
               size: 200,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
-              child: Text(
-                "¡Hola! ${invitado.nombre}, este es tu código QR de acceso.",
-                textAlign: TextAlign.center,
-              ),
-            )
+            
+
+            _logo(invitado),
           ],
         );
       },
@@ -106,6 +116,44 @@ class _VistaUrlState extends State<VistaUrl> {
       },
     );
   }
+
+
+   _reglamento(){
+    return Container(
+      padding: EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
+      margin: EdgeInsets.only(left: 10, right: 10),
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1.0
+        ),
+        borderRadius: BorderRadius.all(
+            Radius.circular(25.0) //                 <--- border radius here
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+        Container(
+          child: Text("1.- LÍMITE DE VELOCIDAD 40 KM/H BOULEVARD CUMBRES"),
+        ),
+        Container(
+          child: Text("2.- LÍMITE DE VELOCIDAD 20 KM/H EN CALLES INTERNAS"),
+        ),
+        Container(
+          child: Text("3.- SANCIÓN DE \$ 750. 00 PESOS M.N. POR EXCESO DE VELOCIDAD"),
+        ),
+        Container(
+          child: Text("4.- PROHIBIDO TEXTEAR MIENTRAS CONDUCES"),
+        ),
+        Container(
+          child: Text("5.- ES NECESARIO PRESENTAR UNA IDENTIFICACIÓN OFICIAL AL INGRESAR"),
+        ),
+        Container(
+          child: Text("6.- NO ESTACIONARSE EN PROPIEDADES PRIVADAS"),
+        ),
+      ]),
+    );
+   }
 
   Future<Fraccionamiento?> getFraccionamientoId(String id) async {
     //var snap = _databaseServices.getFracionamientosById(usuario.idFraccionamiento);
