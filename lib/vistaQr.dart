@@ -3,6 +3,7 @@ import 'package:communeweb/modelos/invitadoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'conecciones/conecciones.dart';
 import 'modelos/fraccionamientos.dart';
@@ -20,6 +21,7 @@ class _VistaUrlState extends State<VistaUrl> {
   late String _token;
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
+  Color _colorFrac = Colors.white;
 
   @override
   void initState() {
@@ -75,7 +77,7 @@ class _VistaUrlState extends State<VistaUrl> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                "¡Hola! ${invitado.nombre}, este es tu código QR de acceso. Recuerda respetar el reglamento.",
+                "¡Hola! ${invitado.nombre}, este es tu código QR de acceso.\n Recuerda respetar el reglamento.",
                 textAlign: TextAlign.center,
               ),
             ),
@@ -92,12 +94,22 @@ class _VistaUrlState extends State<VistaUrl> {
               size: 200,
             ),
             
-
+            
+            
             _logo(invitado),
           ],
         );
       },
     );
+  }
+
+  _launchURLBrowser(String url) async {
+    //const url = 'https://www.google.com/maps/dir//21.1109375,-86.8425279/@21.1108518,-86.9125808,12z';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   _logo(Invitado invitado) {
@@ -108,11 +120,45 @@ class _VistaUrlState extends State<VistaUrl> {
           return CircularProgressIndicator();
         }
 
-        String url = s.data!.urlLogopng.toString();
-        return Container(
-          height: 150,
-          child: Image.network(url),
-        );
+        String url = s.data!.urlLogopng.toString();     
+        _colorFrac = s.data!.getColor();   
+        String urlUbicacion = s.data!.urlUbicacion.toString();
+
+        return Column(children: [
+          Container(
+              child: Text("¿No sabes cómo llegar? "),
+            ),
+          InkWell(
+              onTap: (){
+                _launchURLBrowser(urlUbicacion);
+              },
+              child: Container(
+                padding: EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
+                margin: EdgeInsets.only(left: 10, right: 10),
+                decoration: BoxDecoration(
+                  color: _colorFrac,
+                  border: Border.all(
+                    width: 1.0,
+                    color: _colorFrac
+                  ),
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(25.0) //                 <--- border radius here
+                  ),
+                ),
+                child: Text("Ver ubicación", style: TextStyle(color: Colors.white),)
+              ),
+            ),
+
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+            height: 150,
+            child: Image.network(url),
+          ),
+        ],);
+        
+        
       },
     );
   }
