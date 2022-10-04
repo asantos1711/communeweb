@@ -180,7 +180,7 @@ class _VistaUrlState extends State<VistaUrl> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
         Container(
-          child: Text("1.- LÍMITE DE VELOCIDAD 40 KM/H BOULEVARD CUMBRES"),
+          child: Text("1.- LÍMITE DE VELOCIDAD 30 KM/H BOULEVARD CUMBRES"),
         ),
         Container(
           child: Text("2.- LÍMITE DE VELOCIDAD 20 KM/H EN CALLES INTERNAS"),
