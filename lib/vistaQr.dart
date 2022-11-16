@@ -93,9 +93,6 @@ class _VistaUrlState extends State<VistaUrl> {
               version: QrVersions.auto,
               size: 200,
             ),
-            
-            
-            
             _logo(invitado),
           ],
         );
@@ -120,86 +117,87 @@ class _VistaUrlState extends State<VistaUrl> {
           return CircularProgressIndicator();
         }
 
-        String url = s.data!.urlLogopng.toString();     
-        _colorFrac = s.data!.getColor();   
+        String url = s.data!.urlLogopng.toString();
+        _colorFrac = s.data!.getColor();
         String urlUbicacion = s.data!.urlUbicacion.toString();
 
-        return Column(children: [
-          Container(
+        return Column(
+          children: [
+            Container(
               child: Text("¿No sabes cómo llegar? "),
             ),
-          InkWell(
-              onTap: (){
+            InkWell(
+              onTap: () {
                 _launchURLBrowser(urlUbicacion);
               },
               child: Container(
-                padding: EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
-                margin: EdgeInsets.only(left: 10, right: 10),
-                decoration: BoxDecoration(
-                  color: _colorFrac,
-                  border: Border.all(
-                    width: 1.0,
-                    color: _colorFrac
+                  padding:
+                      EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
+                  margin: EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                    color: _colorFrac,
+                    border: Border.all(width: 1.0, color: _colorFrac),
+                    borderRadius: BorderRadius.all(Radius.circular(
+                            25.0) //                 <--- border radius here
+                        ),
                   ),
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(25.0) //                 <--- border radius here
-                  ),
-                ),
-                child: Text("Ver ubicación", style: TextStyle(color: Colors.white),)
-              ),
+                  child: Text(
+                    "Ver ubicación",
+                    style: TextStyle(color: Colors.white),
+                  )),
             ),
-
             SizedBox(
               height: 10,
             ),
             Container(
-            height: 150,
-            child: Image.network(url),
-          ),
-        ],);
-        
-        
+              height: 150,
+              child: Image.network(url),
+            ),
+          ],
+        );
       },
     );
   }
 
-
-   _reglamento(){
+  _reglamento() {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
       margin: EdgeInsets.only(left: 10, right: 10),
       decoration: BoxDecoration(
-        border: Border.all(
-          width: 1.0
-        ),
+        border: Border.all(width: 1.0),
         borderRadius: BorderRadius.all(
             Radius.circular(25.0) //                 <--- border radius here
-        ),
+            ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Container(
-          child: Text("1.- LÍMITE DE VELOCIDAD 30 KM/H BOULEVARD CUMBRES"),
+            child: Text("1.- LÍMITE DE VELOCIDAD 30 KM/H BOULEVARD",
+                style: TextStyle(color: Colors.red[900]))),
+        Container(
+          child: Text("2.- LÍMITE DE VELOCIDAD 30 KM/H EN CALLES INTERNAS",
+              style: TextStyle(color: Colors.red[900])),
         ),
         Container(
-          child: Text("2.- LÍMITE DE VELOCIDAD 20 KM/H EN CALLES INTERNAS"),
+          child: Text(
+              "3.- SANCIÓN DE \$ 750. 00 PESOS M.N. POR EXCESO DE VELOCIDAD",
+              style: TextStyle(color: Colors.red[900])),
         ),
         Container(
-          child: Text("3.- SANCIÓN DE \$ 750. 00 PESOS M.N. POR EXCESO DE VELOCIDAD"),
+          child: Text("4.- PROHIBIDO TEXTEAR MIENTRAS CONDUCES",
+              style: TextStyle(color: Colors.red[900])),
         ),
         Container(
-          child: Text("4.- PROHIBIDO TEXTEAR MIENTRAS CONDUCES"),
+          child: Text(
+              "5.- ES NECESARIO PRESENTAR UNA IDENTIFICACIÓN OFICIAL AL INGRESAR",
+              style: TextStyle(color: Colors.red[900])),
         ),
         Container(
-          child: Text("5.- ES NECESARIO PRESENTAR UNA IDENTIFICACIÓN OFICIAL AL INGRESAR"),
-        ),
-        Container(
-          child: Text("6.- NO ESTACIONARSE EN PROPIEDADES PRIVADAS"),
+          child: Text("6.- NO ESTACIONARSE EN PROPIEDADES PRIVADAS",
+              style: TextStyle(color: Colors.red[900])),
         ),
       ]),
     );
-   }
+  }
 
   Future<Fraccionamiento?> getFraccionamientoId(String id) async {
     //var snap = _databaseServices.getFracionamientosById(usuario.idFraccionamiento);

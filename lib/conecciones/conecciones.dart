@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:communeweb/modelos/UsuarioModel.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../modelos/invitadoModel.dart';
@@ -21,5 +22,21 @@ class Conecciones {
       print("Error en la toma de datos : " + e.toString());
     }
     return invitado;
+  }
+
+  Future<Usuario?> getProfileUsuario(String id) async {
+    Usuario? usuario;
+    try {
+      DocumentSnapshot snap = await db.collection('usuarios').doc(id).get();
+      print(snap.data());
+      if (snap.exists) {
+        print(snap.data);
+        usuario = Usuario.fromMap((snap.data() as Map<dynamic, dynamic>));
+        return usuario;
+      }
+    } catch (e) {
+      print("Error en la toma de datos : " + e.toString());
+    }
+    return usuario;
   }
 }

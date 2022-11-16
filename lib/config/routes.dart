@@ -1,3 +1,4 @@
+import 'package:communeweb/vistaDatosSocio.dart';
 import 'package:flutter/material.dart';
 
 import '../Page404.dart';
@@ -11,6 +12,15 @@ class RouterGenerator {
       return pageRoute(
           "/commune/qr/" + codigo,
           VistaUrl(
+            qrCode: codigo,
+          ));
+    }
+    if (settings.name?.contains("/commune/socio/") ?? false) {
+      String codigo = settings.name!.split("/").last;
+
+      return pageRoute(
+          "/commune/socio/" + codigo,
+          VistaDatosSocio(
             qrCode: codigo,
           ));
     }
