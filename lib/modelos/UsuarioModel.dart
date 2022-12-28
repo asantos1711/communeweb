@@ -67,7 +67,9 @@ class Usuario {
       nombre: data['nombre'] ?? '',
       telefono: data['telefono'] ?? '',
       email: data['email'] ?? null,
-      password: EncryptData.decryptAES(data['password']) ?? null,
+      password: data['password'] == null
+          ? ""
+          : EncryptData.decryptAES(data['password']),
       direccion: data['direccion'],
       tipo: data['tipo'],
       idResidente: data['idResidente'] ?? '',
