@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:communeweb/modelos/invitadoModel.dart';
+import 'package:communeweb/widget/columnBuilder.dart';
 import 'package:flutter/material.dart';
 import 'package:g_recaptcha_v3/g_recaptcha_v3.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:http/http.dart' as http;
 import 'conecciones/conecciones.dart';
 import 'modelos/fraccionamientos.dart';
 
@@ -22,6 +26,7 @@ class _VistaUrlState extends State<VistaUrl> {
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
   Color _colorFrac = Colors.white;
+  Fraccionamiento? fraccionamiento;
 
   @override
   void initState() {
@@ -84,7 +89,7 @@ class _VistaUrlState extends State<VistaUrl> {
             SizedBox(
               height: 30,
             ),
-            _reglamento(),
+            _reglamento(invitado),
             SizedBox(
               height: 30,
             ),
@@ -120,6 +125,7 @@ class _VistaUrlState extends State<VistaUrl> {
         String url = s.data!.urlLogopng.toString();
         _colorFrac = s.data!.getColor();
         String urlUbicacion = s.data!.urlUbicacion.toString();
+        fraccionamiento = s.data!;
 
         return Column(
           children: [
@@ -159,44 +165,71 @@ class _VistaUrlState extends State<VistaUrl> {
     );
   }
 
-  _reglamento() {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
-      margin: EdgeInsets.only(left: 10, right: 10),
-      decoration: BoxDecoration(
-        border: Border.all(width: 1.0),
-        borderRadius: BorderRadius.all(
-            Radius.circular(25.0) //                 <--- border radius here
-            ),
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Container(
-            child: Text("1.- LÍMITE DE VELOCIDAD 30 KM/H BOULEVARD",
-                style: TextStyle(color: Colors.red[900]))),
-        Container(
-          child: Text("2.- LÍMITE DE VELOCIDAD 30 KM/H EN CALLES INTERNAS",
-              style: TextStyle(color: Colors.red[900])),
-        ),
-        Container(
-          child: Text(
-              "3.- SANCIÓN DE \$ 750. 00 PESOS M.N. POR EXCESO DE VELOCIDAD",
-              style: TextStyle(color: Colors.red[900])),
-        ),
-        Container(
-          child: Text("4.- PROHIBIDO TEXTEAR MIENTRAS CONDUCES",
-              style: TextStyle(color: Colors.red[900])),
-        ),
-        Container(
-          child: Text(
-              "5.- ES NECESARIO PRESENTAR UNA IDENTIFICACIÓN OFICIAL AL INGRESAR",
-              style: TextStyle(color: Colors.red[900])),
-        ),
-        Container(
-          child: Text("6.- NO ESTACIONARSE EN PROPIEDADES PRIVADAS",
-              style: TextStyle(color: Colors.red[900])),
-        ),
-      ]),
-    );
+  _reglamento(Invitado invitado) {
+    return FutureBuilder(
+        future: getFraccionamientoId(invitado.idFraccionamiento!),
+        builder: (e, AsyncSnapshot<Fraccionamiento?> s) {
+          if (s.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+
+          fraccionamiento = s.data;
+
+          if (s.data!.reglasWeb == null || s.data!.reglasWeb!.isEmpty) {
+            return SizedBox();
+          }
+          print("FRACCIONAMIENTOOOOOOOOOO");
+          print(s.data!.reglasWeb.toString());
+
+          return Container(
+              padding:
+                  EdgeInsets.only(left: 20, right: 15, top: 10, bottom: 10),
+              margin: EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1.0),
+                borderRadius: BorderRadius.all(Radius.circular(
+                        25.0) //                 <--- border radius here
+                    ),
+              ),
+              child: ColumnBuilder(
+                itemCount: fraccionamiento!.reglasWeb!.length,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                itemBuilder: (c, i) {
+                  return Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(fraccionamiento!.reglasWeb![i].toString(),
+                          style: TextStyle(color: Colors.red[900])));
+                },
+              )
+              //  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              //   Container(
+              //       child: Text("1.- LÍMITE DE VELOCIDAD 30 KM/H BOULEVARD",
+              //           style: TextStyle(color: Colors.red[900]))),
+              //   Container(
+              //     child: Text("2.- LÍMITE DE VELOCIDAD 30 KM/H EN CALLES INTERNAS",
+              //         style: TextStyle(color: Colors.red[900])),
+              //   ),
+              //   Container(
+              //     child: Text(
+              //         "3.- SANCIÓN DE \$ 750. 00 PESOS M.N. POR EXCESO DE VELOCIDAD",
+              //         style: TextStyle(color: Colors.red[900])),
+              //   ),
+              //   Container(
+              //     child: Text("4.- PROHIBIDO TEXTEAR MIENTRAS CONDUCES",
+              //         style: TextStyle(color: Colors.red[900])),
+              //   ),
+              //   Container(
+              //     child: Text(
+              //         "5.- ES NECESARIO PRESENTAR UNA IDENTIFICACIÓN OFICIAL AL INGRESAR",
+              //         style: TextStyle(color: Colors.red[900])),
+              //   ),
+              //   Container(
+              //     child: Text("6.- NO ESTACIONARSE EN PROPIEDADES PRIVADAS",
+              //         style: TextStyle(color: Colors.red[900])),
+              //   ),
+              // ]),
+              );
+        });
   }
 
   Future<Fraccionamiento?> getFraccionamientoId(String id) async {
@@ -209,17 +242,25 @@ class _VistaUrlState extends State<VistaUrl> {
       return null;
     }
 
-    DocumentSnapshot snaps =
-        await db.collection('fraccionamientos').doc(id).get();
-    print(snaps.data());
+    // DocumentSnapshot snaps =
+    //     await db.collection('fraccionamientos').doc(id).get();
+    // print(snaps.data());
+    final String _url =
+        'https://commune-cf48f-default-rtdb.firebaseio.com/configuracion/fraccionamientos/${id}.json';
 
-    if (snaps.exists) {
+    final response = await http.get(Uri.parse(_url));
+    final decodedData = jsonDecode(response.body);
+
+    try {
+      print("DECODEDATA");
+      print(decodedData);
       print("dentro");
-      Map<String, dynamic> mapa = snaps.data() as Map<String, dynamic>;
-      _fracc = Fraccionamiento.fromJson(mapa);
+      // Map<dynamic, dynamic> mapa = snaps.data() as Map<dynamic, dynamic>;
+      _fracc = Fraccionamiento.fromJson(decodedData);
       return _fracc;
+    } catch (e) {
+      print("ERROR EN FRACIIONAMIENTON $e");
     }
-
     //print(usuarioBloc.miFraccionamiento.color?.r);
   }
 }

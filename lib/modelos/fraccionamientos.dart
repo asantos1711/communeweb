@@ -11,9 +11,9 @@ class Fraccionamiento {
   bool? pagar;
   bool? amenidades;
   bool? reportes;
-  String? idRestaurante;
   String? terminos;
   String? urlUbicacion;
+  List<String>? reglasWeb;
 
   Fraccionamiento(
       {this.nombre,
@@ -23,9 +23,12 @@ class Fraccionamiento {
       this.id,
       this.keyStripe,
       this.urlApi,
-      this.idRestaurante,
       this.urlUbicacion,
-      this.pagar, this.amenidades, this.terminos, this.reportes});
+      this.reglasWeb,
+      this.pagar,
+      this.amenidades,
+      this.terminos,
+      this.reportes});
 
   Color getColor() {
     return Color.fromARGB(255, color!.r, color!.g, color!.b);
@@ -34,15 +37,19 @@ class Fraccionamiento {
   factory Fraccionamiento.fromJson(Map<String, dynamic> json) =>
       Fraccionamiento(
         nombre: json["nombre"] == null ? null : json["nombre"],
-        idRestaurante:
-            json["idRestaurante"] == null ? null : json["idRestaurante"],
+        // idRestaurante:
+        //     json["idRestaurante"] == null ? null : json["idRestaurante"],
         id: json["id"] == null ? null : json["id"],
         urlLogopng: json["urlLogopng"] == null ? null : json["urlLogopng"],
         urlLogojpg: json["urlLogojpg"] == null ? null : json["urlLogojpg"],
         keyStripe: json["keyStripe"] == null ? null : json["keyStripe"],
         urlApi: json["urlApi"] == null ? null : json["urlApi"],
         pagar: json["pagar"] == null ? null : json["pagar"],
-        urlUbicacion: json["urlUbicacion"] == null ? null : json["urlUbicacion"],
+        reglasWeb: json["reglasWeb"] == null
+            ? null
+            : List<String>.from(json["reglasWeb"].map((x) => x)),
+        urlUbicacion:
+            json["urlUbicacion"] == null ? null : json["urlUbicacion"],
         amenidades: json["amenidades"] == null ? false : json["amenidades"],
         reportes: json["reportes"] == null ? false : json["reportes"],
         terminos: json["terminos"] == null ? null : json["terminos"],
@@ -51,7 +58,7 @@ class Fraccionamiento {
 
   Map<String, dynamic> toJson() => {
         "id": id == null ? null : id,
-        "idRestaurante": idRestaurante == null ? null : idRestaurante,
+        // "idRestaurante": idRestaurante == null ? null : idRestaurante,
         "nombre": nombre == null ? null : nombre,
         "urlLogopng": urlLogopng == null ? null : urlLogopng,
         "urlLogojpg": urlLogojpg == null ? null : urlLogojpg,
