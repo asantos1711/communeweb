@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:communeweb/modelos/UsuarioModel.dart';
 import 'package:communeweb/modelos/invitadoModel.dart';
 import 'package:communeweb/widget/columnBuilder.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,8 @@ class _VistaUrlState extends State<VistaUrl> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   Color _colorFrac = Colors.white;
   Fraccionamiento? fraccionamiento;
+  Usuario? _usuario;
+  Conecciones conecciones = Conecciones();
 
   @override
   void initState() {
@@ -54,7 +57,7 @@ class _VistaUrlState extends State<VistaUrl> {
   }
 
   _carga() {
-    Conecciones conecciones = Conecciones();
+    
     return FutureBuilder(
       future: conecciones.getProfile(this.widget.qrCode),
       builder: (c, AsyncSnapshot<Invitado?> s) {
@@ -72,6 +75,8 @@ class _VistaUrlState extends State<VistaUrl> {
 
         Invitado invitado = s.data!;
 
+       
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -86,6 +91,10 @@ class _VistaUrlState extends State<VistaUrl> {
                 textAlign: TextAlign.center,
               ),
             ),
+            SizedBox(
+              height: 30,
+            ),
+            _direccion(invitado),
             SizedBox(
               height: 30,
             ),
@@ -158,6 +167,35 @@ class _VistaUrlState extends State<VistaUrl> {
             Container(
               height: 150,
               child: Image.network(url),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+  _direccion(Invitado invitado) {
+    return FutureBuilder(
+      future: conecciones.getProfileUsuario(invitado.idResidente.toString()),
+      builder: (e, AsyncSnapshot<Usuario?> s) {
+        if (s.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        
+        _usuario = s.data!;
+
+        return Column(
+          children: [
+            Container(
+              child: Text("Dirección:"),
+            ),            
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              //height: 150,
+              child: Text(_usuario?.direccion.toString() ?? "", style: TextStyle(fontWeight: FontWeight.bold),),
             ),
           ],
         );
