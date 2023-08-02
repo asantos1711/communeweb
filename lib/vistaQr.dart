@@ -57,7 +57,6 @@ class _VistaUrlState extends State<VistaUrl> {
   }
 
   _carga() {
-    
     return FutureBuilder(
       future: conecciones.getProfile(this.widget.qrCode),
       builder: (c, AsyncSnapshot<Invitado?> s) {
@@ -74,8 +73,6 @@ class _VistaUrlState extends State<VistaUrl> {
         }
 
         Invitado invitado = s.data!;
-
-       
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,6 +103,18 @@ class _VistaUrlState extends State<VistaUrl> {
               data: this.widget.qrCode.toString(),
               version: QrVersions.auto,
               size: 200,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              invitado.nombre.toString(),
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 20,
             ),
             _logo(invitado),
           ],
@@ -174,7 +183,6 @@ class _VistaUrlState extends State<VistaUrl> {
     );
   }
 
-
   _direccion(Invitado invitado) {
     return FutureBuilder(
       future: conecciones.getProfileUsuario(invitado.idResidente.toString()),
@@ -182,20 +190,23 @@ class _VistaUrlState extends State<VistaUrl> {
         if (s.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         }
-        
+
         _usuario = s.data!;
 
         return Column(
           children: [
             Container(
               child: Text("Dirección:"),
-            ),            
+            ),
             SizedBox(
               height: 10,
             ),
             Container(
               //height: 150,
-              child: Text(_usuario?.direccion.toString() ?? "", style: TextStyle(fontWeight: FontWeight.bold),),
+              child: Text(
+                _usuario?.direccion.toString() ?? "",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         );
