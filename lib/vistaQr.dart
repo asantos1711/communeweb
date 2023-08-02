@@ -91,10 +91,6 @@ class _VistaUrlState extends State<VistaUrl> {
             SizedBox(
               height: 30,
             ),
-            _direccion(invitado),
-            SizedBox(
-              height: 30,
-            ),
             _reglamento(invitado),
             SizedBox(
               height: 30,
@@ -114,7 +110,11 @@ class _VistaUrlState extends State<VistaUrl> {
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 20,
+              height: 10,
+            ),
+            _direccion(invitado),
+            SizedBox(
+              height: 30,
             ),
             _logo(invitado),
           ],
