@@ -25,6 +25,10 @@ class Invitado {
   String? idFraccionamiento;
   int? idLote;
   int? idRegistro;
+  //Datos verificacion
+  int? id_veri;
+  bool? status_veri;
+  String? magicLink;
 
   Invitado(
       {this.id,
@@ -47,7 +51,10 @@ class Invitado {
       this.activo,
       this.idLote,
       this.idRegistro,
-      this.idFraccionamiento});
+      this.idFraccionamiento,
+      this.magicLink,
+      this.id_veri,
+      this.status_veri});
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -70,7 +77,10 @@ class Invitado {
         'activo': activo,
         'idLote': idLote,
         'idRegistro': idRegistro,
-        'idFraccionamiento': idFraccionamiento
+        'idFraccionamiento': idFraccionamiento,
+        'id_veri': id_veri,
+        'status_veri': status_veri,
+        'magicLink': magicLink,
       };
 
   Map<String, dynamic> toJsonRecurrente() => {
@@ -143,6 +153,9 @@ class Invitado {
         idLote: data['idLote'] ?? 0,
         idRegistro: data['idRegistro'] ?? 0,
         activo: data['activo'] ?? false,
+        id_veri: data['id_veri'] ?? null,
+        status_veri: data['status_veri'] ?? false,
+        magicLink: data['magicLink'] ?? null,
         idEvento: data['idEvento']);
   }
 }

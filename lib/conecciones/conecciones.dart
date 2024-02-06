@@ -24,6 +24,23 @@ class Conecciones {
     return invitado;
   }
 
+  Future setStatusInvitado(String id) async {
+    Invitado? invitado;
+    try {
+      DocumentSnapshot snap = await db.collection('invitados').doc(id).get();
+      print(snap.data());
+      if (snap.exists) {
+        print(snap.data);
+        invitado = Invitado.fromMap(snap);
+        invitado.status_veri = true;
+        await db.collection('invitados').doc(id).set(invitado.toJson());
+      }
+    } catch (e) {
+      print("Error en la toma de datos : " + e.toString());
+    }
+    return;
+  }
+
   Future<Usuario?> getProfileUsuario(String id) async {
     Usuario? usuario;
     try {

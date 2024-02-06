@@ -10,6 +10,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:http/http.dart' as http;
+import 'btnVerify.dart';
 import 'conecciones/conecciones.dart';
 import 'modelos/fraccionamientos.dart';
 
@@ -170,6 +171,10 @@ class _VistaUrlState extends State<VistaUrl> {
                     style: TextStyle(color: Colors.white),
                   )),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            BotonVerificacion(invitado: invitado),
             SizedBox(
               height: 10,
             ),
